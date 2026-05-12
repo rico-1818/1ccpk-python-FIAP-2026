@@ -1,67 +1,167 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-    <h1>listas encadeadas (versão simples)</h1> 
+  <meta charset="UTF-8">
+  <title>Listas encadeadas(versão simples)</title>
 
-    <input type="text" id="nome" placeholder="digite um nome"> 
-    <button onclick='adicionar()'>adicionar</button>
-    <button onclick= 'mostrar()'>mostrar lista</button>
+  <style>
+    body {
+        font-family: arial;
+        margin: 30px;
+        color: darkslateblue;
+        background-color: black;
+    }
+    button {
+        width: 150px;
+    }
+    input {
+        width: 450px;
+    }
+    input, button {
+        margin: 5px;
+        padding: 8px;
+        color: darkslateblue;
+        
+    }
+    #saida {
+        margin-top: 20px;
+        padding: 15px;
+        border: 1px solid #9500f8;
+    }
+  </style>
+</head>
+
+<body>
+
+    <h1>listat encadeadas(versão simples)</h1>
+
+    <input type="text" id="nome" placeholder="Digite um nome">
+    <br>
+    <button onclick="adicionarFim()">Adicionar no Fim</button>
+    <button onclick="adicionarInicio()">Adicionar no Inicio</button>
+    <button onclick="removerInicio()">Remover Inicio</button>
+    <br>
+    <button onclick="adicionar()">Contar elementos</button>
+    <button onclick="buscar()">Buscar nome</button>
+    <button onclick="mostrar()">Mostrar Lista</button>
+    <button onclick="remover()">remover da lista</button>
+
 
     <div id="saida"></div>
 
     <script>
-        //'listas encadeada' simulada
-        let valores = [];
-        let proximo = [];
+    // "lista encadeada" simulada
+    let valores = [];
+    let proximo = [];
 
-        let inicio = -1;
-        let ultimo = -1;
+    let inicio = -1;
+    let ultimo = -1;
 
-        function adicionar() {
-            let nome = document.getElementById('nome').value;
-            if (nome === '') {
-                alert('digite um nome');
-                return;
-            }
-            let novoIndice = valores.length;
-            valores.push(nome);
-            proximo.push(-1);
+    function adicionarFim() {
+        let nome = document.getElementById("nome").value;
+        if (nome === "") {
+            alert("Digite um nome");
+            return;
+        }
+        let novoIndice = valores.length;
+        valores.push(nome);
+        proximo.push(-1);
 
-            if (inicio === -1) {
-                inicio = novoIndice;
-                ultimo = novoIndice;
-            } else {
-                proximo[ultimo] = novoIndice;
-                ultimo = novoIndice;                    
-            }
-
-            document.getElementById('nome').value = '';
-            document.getElementById('saida').innerHTML = 'elemento adicionado!';
+        if (inicio === -1) {
+            inicio = novoIndice;
+            ultimo = novoIndice;
+        } else {
+            proximo[ultimo] = novoIndice;
+            ultimo = novoIndice;
         }
 
-        function mostrar() {
-            let resultado = '';
-            let atual = inicio;
+        document.getElementById("nome").value = "";
+        mostrar()
+    }
 
-            if (inicio === -1) {
-                resultado = 'lista vazia'
+    function adicionarInicio() {
+        let nome = document.getElementById("nome").value;
+        if (nome === "") {
+            alert("Digite um nome");
+            return;
+        }
+        let novoIndice = valores.length;
+        valores.push(nome);
+
+        proximo.push(inicio);
+        inicio = novoIndice;
+
+        if (ultimo === -1) {
+            ultimo = novoIndice
+        }
+      
+        document.getElementById("nome").value = "";
+        mostrar()
+    }
+
+    function removerInicio() {
+        if (inicio === -1) {
+            alert('lista vazia');
+            return;
+        }
+        
+        inicio = proximo[inicio];
+
+        if (inicio === -1) {
+            ultimo = -1;
+        }
+
+        mostrar();
+    }
+
+    function buscar() {
+        let nomeBusca = document.getElementById('nome').value;
+        if (nomeBusca === '') {
+            alert('digite um nome');
+            return;
+        }
+
+        let atual = inicio;
+        let encontrou = false;
+
+        while (atual !== -1) {
+            alert(valores[atual] + '-' + nomeBusca)
+            if (valores[atual] === nomeBusca) {
+                encontrou = true;
             }
+            atual = proximo[atual];
+        }
+        if (encontrou) {
+            document.getElementById('saida').innerHTML = 'nome encontrado na lista.';
+        } else {
+            document.getElementById('saida').innerHTML = 'nome NÃO encontrado.';
+        }
+    }
 
-            while (atual !== -1) {
-                resultado += valores[atual] + '→';
-                atual = proximo[atual];
-            }
 
+    function mostrar() {
+        let resultado = "";
+        let atual = inicio;
+
+        if (inicio === -1) {
+            resultado = "Lista vazia";
+        }
+
+        while (atual !== -1) {
+            resultado += valores[atual] + " → ";
+            atual = proximo[atual];
+        }
+
+        if (inicio === -1) {
+            resultado = 'lista vazia';
+        }
+
+        else {
             resultado += 'null';
-
-            document.getElementById('saida').innerHTML = resultado;
         }
+        document.getElementById("saida").innerHTML = resultado;
+    }
     </script>
+
 </body>
 </html>
