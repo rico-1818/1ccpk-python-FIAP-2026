@@ -138,6 +138,45 @@
         }
     }
 
+    function remover() {
+    let nomeBusca = document.getElementById('nome').value;
+
+    if (nomeBusca === '') {
+        alert('digite um nome');
+        return;
+    }
+
+    let atual = inicio;
+    let anterior = -1;
+    let encontrou = false;
+
+    while (atual !== -1) {
+        if (valores[atual] === nomeBusca) {
+            encontrou = true;
+            break;
+        }
+        anterior = atual;
+        atual = proximo[atual];
+    }
+
+    if (!encontrou) {
+        document.getElementById('saida').innerHTML = 'Nome não encontrado, não é possível remover.';
+        return;
+    }
+
+    if (anterior === -1) {
+        inicio = proximo[atual];
+    } else {
+        proximo[anterior] = proximo[atual];
+    }
+
+    valores[atual] = null;
+    proximo[atual] = -1;
+
+    document.getElementById('saida').innerHTML = 'Nome removido com sucesso.';
+
+    }
+
 
     function mostrar() {
         let resultado = "";
