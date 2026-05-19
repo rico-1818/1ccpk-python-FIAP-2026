@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Listas encadeadas(versão simples)</title>
+
+  <style>
+    body {
+        font-family: arial;
+        margin: 30px;
+        color: darkslateblue;
+        background-color: black;
+    }
+    button {
+        width: 150px;
+    }
+    input {
+        width: 450px;
+    }
+    input, button {
+        margin: 5px;
+        padding: 8px;
+        color: darkslateblue;
+        
+    }
+    #saida {
+        margin-top: 20px    ;
+        padding: 15px;
+        border: 1px solid #9500f8;
+    }
+  </style>
+</head>
+
+<body>
+
+    <h1>listas encadeadas(versão simples)</h1>
+
+    <input type="text" id="nome" placeholder="Digite um nome">
+    <br>
+    <button onclick="adicionarTarefa()">Adicionar tarefa</button>
+    <button onclick="adicionarUrgencia()">Adicionar Urgencia</button>
+    <button onclick="reorganizarPrioridade()">Reorganizar prioridade</button>
+    <br>
+    <button onclick="mostrar()">Mostrar Lista</button>
+    <button onclick="concluir()">remover tarefa concluida</button>
+    <button onclick="contarTarefas()">Contar tarefas</button>
+
+
+    <div id="saida"></div>
+
+    <script>
+    let valores = [];
+    let proximo = [];
+
+    let inicio = -1;
+    let ultimo = -1;
+
+    function adicionarTarefa() {
+        let nome = document.getElementById("nome").value;
+        if (nome === "") {
+            alert("Digite um nome");
+            return;
+        }
+        let novoIndice = valores.length;
+        valores.push(nome);
+        proximo.push(-1);
+
+        if (inicio === -1) {
+            inicio = novoIndice;
+            ultimo = novoIndice;
+        } else {
+            proximo[ultimo] = novoIndice;
+            ultimo = novoIndice;
+        }
+
+        document.getElementById("nome").value = "";
+    }
+
+    function adicionarUrgencia() {
+        let nomeBusca = document.getElementById('nome').value;
+        if (nomeBusca === '') {
+            alert('Digite um nome para mover a prioridade');
+            return;
+        }
+
+        if (inicio === -1) {
+            document.getElementById('saida').innerHTML = 'Lista vazia.';
+            return;
+        }
+
+       
+        if (valores[inicio] === nomeBusca) {
+            document.getElementById('saida').innerHTML = 'Tarefa já está no início da lista.';
+            return;
+        }
+
+        let anterior = inicio;
+        let atual = proximo[inicio];
+
+        while (atual !== -1) {
+            if (valores[atual] === nomeBusca) {
+
+                
+                proximo[anterior] = proximo[atual];
+                if (atual === ultimo) {
+                    ultimo = anterior;
+                }
+
+                
+                proximo[atual] = inicio;
+                inicio = atual;
+
+                document.getElementById('saida').innerHTML = 'Prioridade reorganizada com sucesso.';
+                mostrar();
+                return;
+            }
+            anterior = atual;
+            atual = proximo[atual];
+        }
+
+        document.getElementById('saida').innerHTML = 'Nome não encontrado na lista.';
+    }
+
+    function reorganizarPrioridade() {
+        let nomeBusca = document.getElementById('nome').value;
+        if (nomeBusca === '') {
+            alert('Digite o nome da tarefa que deseja mover');
+            return;
+        }
+
+        if (inicio === -1) {
+            document.getElementById('saida').innerHTML = 'Lista vazia.';
+            return;
+        }
+
+        let posicaoStr = prompt('Para qual posição deseja mover "' + nomeBusca + '"? (ex: 1, 2, 3...)');
+        if (posicaoStr === null || posicaoStr === '') {
+            return;
+        }
+
+        let posicaoDesejada = parseInt(posicaoStr);
+        if (isNaN(posicaoDesejada) || posicaoDesejada < 1) {
+            alert('Digite um número de posição válido (mínimo 1)');
+            return;
+        }
+
+        let anteriorAlvo = -1;
+        let alvo = inicio;
+
+        while (alvo !== -1 && valores[alvo] !== nomeBusca) {
+            anteriorAlvo = alvo;
+            alvo = proximo[alvo];
+        }
+
+        if (alvo === -1) {
+            document.getElementById('saida').innerHTML = 'Nome não encontrado na lista.';
+            return;
+        }
+
+        if (anteriorAlvo === -1) {
+            inicio = proximo[alvo];
+        } else {
+            proximo[anteriorAlvo] = proximo[alvo];
+        }
+
+        if (alvo === ultimo) {
+            ultimo = anteriorAlvo;
+        }
+
+        proximo[alvo] = -1;
+
+        if (posicaoDesejada === 1) {
+            proximo[alvo] = inicio;
+            inicio = alvo;
+            if (proximo[alvo] === -1) {
+                ultimo = alvo;
+            }
+        } else {
+            let cont = 1;
+            let atual = inicio;
+
+            while (atual !== -1 && cont < posicaoDesejada - 1) {
+                atual = proximo[atual];
+                cont = cont + 1;
+            }
+
+            if (atual === -1) {
+                proximo[ultimo] = alvo;
+                ultimo = alvo;
+            } else {
+                proximo[alvo] = proximo[atual];
+                proximo[atual] = alvo;
+                if (proximo[alvo] === -1) {
+                    ultimo = alvo;
+                }
+            }
+        }
+
+        document.getElementById('saida').innerHTML = 'Tarefa movida para a posição ' + posicaoDesejada + ' com sucesso.';
+    }
+
+    function concluir() {
+        let nomeBusca = document.getElementById('nome').value;
+
+        if (nomeBusca === '') {
+            alert('digite um nome');
+            return;
+        }
+
+        let atual = inicio;
+        let anterior = -1;
+        let encontrou = false;
+
+        while (atual !== -1) {
+            if (valores[atual] === nomeBusca) {
+                encontrou = true;
+                break;
+            }
+            anterior = atual;
+            atual = proximo[atual];
+        }
+
+        if (!encontrou) {
+            document.getElementById('saida').innerHTML = 'Nome não encontrado, não é possível remover.';
+            return;
+        }
+
+        if (anterior === -1) {
+            inicio = proximo[atual];
+        } else {
+            proximo[anterior] = proximo[atual];
+        }
+
+        if (atual === ultimo) {
+            ultimo = anterior;
+        }
+
+        valores[atual] = null;
+        proximo[atual] = -1;
+
+        document.getElementById('saida').innerHTML = 'tarefa removida com sucesso.';
+    }
+
+    function contarTarefas() {
+        let cont = 0;
+        let atual = inicio;
+
+        while (atual !== -1) {
+            cont = cont + 1;
+            atual = proximo[atual];
+        }
+
+        document.getElementById('saida').innerHTML = 'Total de tarefas: ' + cont;
+    }
+
+    function mostrar() {
+        let resultado = "";
+        let atual = inicio;
+
+        if (inicio === -1) {
+            resultado = "Lista vazia";
+        }
+
+        while (atual !== -1) {
+            resultado += valores[atual] + " → ";
+            atual = proximo[atual];
+        }
+
+        if (inicio === -1) {
+            resultado = 'lista vazia';
+        }
+
+        else {
+            resultado += 'null';
+        }
+        document.getElementById("saida").innerHTML = resultado;
+    }
+    </script>
+
+</body>
+</html>
