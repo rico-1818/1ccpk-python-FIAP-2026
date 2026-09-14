@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!--cabeça-->
+    <head>
+        <script>
+            let dados = [];
+
+            dados.push('a');
+            dados.push('b');
+            dados.push('c');
+            dados.push('d');
+
+            for(i = 0; i < dados.length; i++) {
+                alert('elemento' + (i+1) + ':' + dados[i]);
+                console.log('elemento' + (i+1) + ':' + dados[i]);
+            }
+
+            let removido = dados.shift();
+            alert('removido: ' + removido);
+            console.log('removido: ' + removido);
+
+            for(i = 0; i < dados.length; i++) {
+                alert('elemento' + (i+1) + ':' + dados[i]);
+                console.log('elemento' + (i+1) + ':' + dados[i]);
+            }
+
+            removido = dados.shift();
+            alert('removido: ' + removido);
+            console.log('removido: ' + removido);
+
+            for(i = 0; i < dados.length; i++) {
+                alert('elemento' + (i+1) + ':' + dados[i]);
+                console.log('elemento' + (i+1) + ':' + dados[i]);
+            }
+
+            removido = dados.shift();
+            alert('removido: ' + removido);
+            console.log('removido: ' + removido);
+
+            var numeros = [5, 9, 0, 6];
+            var temp;
+            console.log('vetor original ' + numeros);
+            for (i = 0; i < numeros.length - 1; i++) {
+                for (j = i+1; j < numeros.length; j++) {
+                    if (numeros[i] > numeros[j]) {
+                        temp = numeros[j];
+                        numeros[j] = numeros[i];
+                        numeros[i] = temp;
+                    }
+                }
+            }
+            console.log('vetor ordenado' + numeros);
+            /* 
+            para i de 1 ate 6 faca
+                 leia(v[i])
+            fimpara
+            */
+
+        
+        </script>
+    </head>
+    <!--corpo-->
+    <body>
+    
+    </body>
+</html>
